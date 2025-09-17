@@ -1,8 +1,1 @@
-package com.example.demo;
-
-public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello from CI/CD project!");
-    }
-}
-
+public class HelloWorld { public static void main(String[] args) { System.out.println("Hello CI/CD!"); } }
