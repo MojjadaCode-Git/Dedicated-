@@ -1,17 +1,15 @@
-
 pipeline {
     agent any
 
     tools {
-        maven 'MAVEN_3'      // Jenkins → Global Tool Configuration lo set chesina Maven
-        jdk 'Java17'         // Jenkins → Global Tool Configuration lo set chesina JDK
+        maven 'MAVEN_3'   // Jenkins → Global Tool Config
+        jdk 'Java17'      // Jenkins → Global Tool Config
     }
 
     environment {
-        NEXUS_URL = "http://54.166.204.73:8082/repository/maven-releases/"
         TOMCAT_USER = "tomcat"
         TOMCAT_PASS = "tomcat"
-        TOMCAT_URL = "http://54.166.204.73:8081/manager/text"
+        TOMCAT_URL  = "http://54.166.204.73:8081/manager/text"
     }
 
     stages {
@@ -31,14 +29,8 @@ pipeline {
             steps {
                 sh '''
                 echo "Deploying to Tomcat..."
-                WAR_FILE=target/demo.war
-                if [ -f "$WAR_FILE" ]; then
-                  curl -u $TOMCAT_USER:$TOMCAT_PASS -T $WAR_FILE \
-                    "$TOMCAT_URL/deploy?path=/demo&update=true"
-                else
-                  echo "WAR file not found!"
-                  exit 1
-                fi
+                curl -u $TOMCAT_USER:$TOMCAT_PASS -T target/demo.war \
+                "$TOMCAT_URL/deploy?path=/demo&update=true"
                 '''
             }
         }
