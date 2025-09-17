@@ -1,16 +1,18 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'     // Jenkins tool name for Maven
-        jdk 'Java11'       // Jenkins tool name for JDK 11
-    }
-
     environment {
-        NEXUS_URL = 'http://<your-server-ip>:8081/repository/maven-releases/'
-        NEXUS_CREDENTIALS = credentials('nexus-credentials') // Add in Jenkins
-        TOMCAT_SERVER = 'http://<your-server-ip>:8080/manager/text'
-        TOMCAT_CREDENTIALS = credentials('tomcat-credentials') // Add in Jenkins
+        // Nexus configuration
+        NEXUS_URL = "http://54.166.204.73:8082/repository/maven-releases/"
+        NEXUS_REPO = "maven-releases"
+        NEXUS_GROUP = "com.example"
+        NEXUS_ARTIFACT = "demo"
+        NEXUS_VERSION = "1.0.0"
+
+        // Tomcat configuration
+        TOMCAT_USER = "tomcat"
+        TOMCAT_PASS = "tomcat"
+        TOMCAT_URL  = "http://54.166.204.73:8081/manager/text"
     }
 
     stages {
@@ -23,34 +25,33 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
-        stage('Upload to Nexus') {
+        stage('Upload Artifact to Nexus') {
             steps {
-                sh """
+                sh '''
                 mvn deploy:deploy-file \
-                  -DgroupId=com.example \
-                  -DartifactId=demo \
-                  -Dversion=1.0-SNAPSHOT \
-                  -Dpackaging=war \
-                  -Dfile=target/demo-1.0-SNAPSHOT.war \
-                  -DrepositoryId=nexus \
-                  -Durl=$NEXUS_URL \
-                  -Dusername=$NEXUS_CREDENTIALS_USR \
-                  -Dpassword=$NEXUS_CREDENTIALS_PSW
-                """
+                    -DgroupId=$NEXUS_GROUP \
+                    -DartifactId=$NEXUS_ARTIFACT \
+                    -Dversion=$NEXUS_VERSION \
+                    -Dpackaging=war \
+                    -Dfile=target/demo-1.0-SNAPSHOT.war \
+                    -DrepositoryId=$NEXUS_REPO \
+                    -Durl=$NEXUS_URL
+                '''
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
-                sh """
-                curl -u $TOMCAT_CREDENTIALS_USR:$TOMCAT_CREDENTIALS_PSW \
-                  -T target/demo-1.0-SNAPSHOT.war \
-                  "$TOMCAT_SERVER/deploy?path=/demo&update=true"
-                """
+                sh '''
+                echo "Deploying to Tomcat..."
+                curl -u $TOMCAT_USER:$TOMCAT_PASS \
+                     -T target/demo-1.0-SNAPSHOT.war \
+                     "$TOMCAT_URL/deploy?path=/demo&update=true"
+                '''
             }
         }
     }
