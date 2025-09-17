@@ -27,7 +27,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSP API (optional, for JSP support) -->
+        <!-- JSP API (for JSP support) -->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
@@ -37,7 +37,6 @@
     </dependencies>
 
     <build>
-        <finalName>demo</finalName>
         <plugins>
             <!-- Compiler plugin -->
             <plugin>
