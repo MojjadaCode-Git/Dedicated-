@@ -65,10 +65,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>nexus</id>
-            <url>http://54.175.31.53:8082/repository/maven-snapshots/</url>
+            <url>http://http://54.175.31.53:8082/#browse/browse:sai/</url>
         </snapshotRepository>
     </distributionManagement>
 
 </project>
+
 
 
