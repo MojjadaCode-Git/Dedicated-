@@ -7,7 +7,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
-    <version>1.8.9-SNAPSHOT</version>
+    <version>1.8.9-</version>
     <packaging>war</packaging>
 
     <name>Demo CI/CD Project</name>
@@ -70,4 +70,5 @@
     </distributionManagement>
 
 </project>
+
 
